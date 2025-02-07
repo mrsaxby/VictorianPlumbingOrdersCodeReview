@@ -33,19 +33,22 @@ public class OrdersController : ControllerBase
 
             return Task.FromResult<IActionResult>(Ok(response));
         }
+        // There aren't any data annotation attributes so will this ever catch a ValidationException?
         catch (ValidationException ex)
         {
             return Task.FromResult<IActionResult>(BadRequest(ex.Errors));
         }
         catch (Exception ex)
         {
+            // Would a JSON response with the error be more appropriate Aas catching then throwing a generic exception doesn't seem right?
+            // The consumer of the API could then use this response and redirect to a failure page or similar
             throw new Exception(ex.Message);
         }
-    }
-
+    }   
 
     [HttpPost("[action]")]
     [SwaggerRequestExample(typeof(CreateOrderRequestDto), typeof(CreateOrderExample))]
+    // should this be POST /orders ?
     public Task<IActionResult> Create([FromBody]CreateOrderRequestDto request)
     {
         try

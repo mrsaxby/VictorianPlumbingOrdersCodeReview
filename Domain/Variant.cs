@@ -26,5 +26,5 @@ public class Variant
     public decimal Price { get; private set; }
 
     public Product Product { get; private set; }
-    public ICollection<OrderItem> OrderItems { get; private set; }
+    public ICollection<OrderItem> OrderItems { get; private set; } // Should this be on this obj?
 }

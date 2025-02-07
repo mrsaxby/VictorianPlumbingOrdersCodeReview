@@ -33,6 +33,8 @@ public class OrderCreator(
 
     public OrderDto CreateOrder(CreateOrderRequestDto request)
     {
+        // Should the customers addresses be linked to them?
+        // Then you could return a full customer object?
         var customer = customerProvider.GetCustomer(request.Customer);
         var addresses = addressProvider.GetAddresses(request.Customer.BillingAddress,
                                                      request.Customer.ShippingAddress);
@@ -48,14 +50,14 @@ public class OrderCreator(
 
         var products = GetProducts(request.OrderItems);
 
-        order.UpdateItems(products);
+        order.UpdateItems(products); // method name doesn't really make sense, CalculateTotal?
         _unitOfWork.Save();
 
-        var outboxMessage = outboxMessageCreator.Create<Order>(order);
+        var outboxMessage = outboxMessageCreator.Create<Order>(order); // should this be _outboxMessageCreator
 
         _outboxRepo.Insert(outboxMessage);
 
-        _unitOfWork.Save();
+        _unitOfWork.Save(); // called twice?
 
         _outboxMessageSender.Send(outboxMessage);
 

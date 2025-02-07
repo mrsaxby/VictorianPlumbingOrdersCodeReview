@@ -6,4 +6,6 @@ namespace Application.Customers;
 public interface ICustomerProvider
 {
     Customer GetCustomer(CustomerDto request);
+
+    // CreateCustomer?
 }
