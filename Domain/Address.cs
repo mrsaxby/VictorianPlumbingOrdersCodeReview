@@ -5,7 +5,7 @@ namespace Domain;
 
 public class Address
 {
-    private Address() {}
+    private Address() {} // never used, would you ever want to create an empty Address object?
 
     public Address(string lineOne,
                    string lineTwo,

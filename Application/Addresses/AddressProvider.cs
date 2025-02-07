@@ -13,6 +13,7 @@ public class AddressProvider(IRepository<Address> addressRepo,
     public Tuple<Address, Address> GetAddresses(AddressDto billingAddressDto,
                                                 AddressDto shippingAddressDto)
     {
+        // could accept an Address object to simplify this throughout
         var billingAddressHash = Address.GenerateAddressHash(billingAddressDto.AddressLineOne,
                                                              billingAddressDto.AddressLineTwo!,
                                                              billingAddressDto.AddressLineThree!,
@@ -27,6 +28,7 @@ public class AddressProvider(IRepository<Address> addressRepo,
 
         var addresses = addressRepo.Get(x => lookupHashes.Contains(x.Hash));
 
+        // A method could be created to simplify and reduce code duplication
         var billingAddress = addresses.SingleOrDefault(x => x.Hash == billingAddressHash)
                              ?? CreateAddress(billingAddressDto.AddressLineOne,
                                               billingAddressDto.AddressLineTwo!,
@@ -42,6 +44,7 @@ public class AddressProvider(IRepository<Address> addressRepo,
         return new Tuple<Address, Address>(billingAddress, shippingAddress);
     }
 
+    // could accept an Address object to simplify this
     private Address CreateAddress(string lineOne,
                                   string lineTwo,
                                   string lineThree,

@@ -25,6 +25,7 @@ public class OrderUpdater(
 
     public OrderDto UpdateOrder(UpdateOrderRequestDto request)
     {
+        // Could create anm order GetMethod to not repoeat code
         var order = _orderRepo.Get(x => x.OrderNumber == request.OrderNumber)
                               .Include(x => x.OrderItems)
                                 .ThenInclude(x => x.Variant)
@@ -51,6 +52,8 @@ public class OrderUpdater(
                                  .ToDictionary(x => x.variant, x => x.item.Quantity);
 
         order!.UpdateItems(orderItems);
+
+        // could use a shared method to perform this with the delivery address
         order.UpdateShippingAddress(request.ShippingAddress.AddressLineOne,
                                     request.ShippingAddress.AddressLineTwo!,
                                     request.ShippingAddress.AddressLineThree!,
@@ -62,7 +65,7 @@ public class OrderUpdater(
 
         _outboxRepo.Insert(outboxMessage);
 
-        _unitOfWork.Save();
+        _unitOfWork.Save(); // called twice
 
         _outboxMessageSender.Send(outboxMessage);
 
